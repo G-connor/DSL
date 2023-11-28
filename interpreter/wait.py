@@ -22,6 +22,12 @@ class InputThread(threading.Thread):
 
 
 def input_with_timeout(x):
+    """
+    获取输入并计时，当超时时告知用户退出输入
+
+    @param x:
+    @return:
+    """
     input_prompt = ""
 
     input_thread = InputThread(input_prompt)
