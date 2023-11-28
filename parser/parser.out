@@ -1,0 +1,192 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> script
+Rule 1     script -> script step
+Rule 2     script -> step
+Rule 3     step -> STEP ID block
+Rule 4     block -> block statement
+Rule 5     block -> statement
+Rule 6     statement -> SPEAK STRING
+Rule 7     statement -> BRANCH STRING ID
+Rule 8     statement -> DEFAULT ID
+
+Terminals, with rules where they appear
+
+BRANCH               : 7
+DEFAULT              : 8
+ID                   : 3 7 8
+SPEAK                : 6
+STEP                 : 3
+STRING               : 6 7
+error                : 
+
+Nonterminals, with rules where they appear
+
+block                : 3 4
+script               : 1 0
+statement            : 4 5
+step                 : 1 2
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . script
+    (1) script -> . script step
+    (2) script -> . step
+    (3) step -> . STEP ID block
+
+    STEP            shift and go to state 3
+
+    script                         shift and go to state 1
+    step                           shift and go to state 2
+
+state 1
+
+    (0) S' -> script .
+    (1) script -> script . step
+    (3) step -> . STEP ID block
+
+    STEP            shift and go to state 3
+
+    step                           shift and go to state 4
+
+state 2
+
+    (2) script -> step .
+
+    STEP            reduce using rule 2 (script -> step .)
+    $end            reduce using rule 2 (script -> step .)
+
+
+state 3
+
+    (3) step -> STEP . ID block
+
+    ID              shift and go to state 5
+
+
+state 4
+
+    (1) script -> script step .
+
+    STEP            reduce using rule 1 (script -> script step .)
+    $end            reduce using rule 1 (script -> script step .)
+
+
+state 5
+
+    (3) step -> STEP ID . block
+    (4) block -> . block statement
+    (5) block -> . statement
+    (6) statement -> . SPEAK STRING
+    (7) statement -> . BRANCH STRING ID
+    (8) statement -> . DEFAULT ID
+
+    SPEAK           shift and go to state 8
+    BRANCH          shift and go to state 9
+    DEFAULT         shift and go to state 10
+
+    block                          shift and go to state 6
+    statement                      shift and go to state 7
+
+state 6
+
+    (3) step -> STEP ID block .
+    (4) block -> block . statement
+    (6) statement -> . SPEAK STRING
+    (7) statement -> . BRANCH STRING ID
+    (8) statement -> . DEFAULT ID
+
+    STEP            reduce using rule 3 (step -> STEP ID block .)
+    $end            reduce using rule 3 (step -> STEP ID block .)
+    SPEAK           shift and go to state 8
+    BRANCH          shift and go to state 9
+    DEFAULT         shift and go to state 10
+
+    statement                      shift and go to state 11
+
+state 7
+
+    (5) block -> statement .
+
+    SPEAK           reduce using rule 5 (block -> statement .)
+    BRANCH          reduce using rule 5 (block -> statement .)
+    DEFAULT         reduce using rule 5 (block -> statement .)
+    STEP            reduce using rule 5 (block -> statement .)
+    $end            reduce using rule 5 (block -> statement .)
+
+
+state 8
+
+    (6) statement -> SPEAK . STRING
+
+    STRING          shift and go to state 12
+
+
+state 9
+
+    (7) statement -> BRANCH . STRING ID
+
+    STRING          shift and go to state 13
+
+
+state 10
+
+    (8) statement -> DEFAULT . ID
+
+    ID              shift and go to state 14
+
+
+state 11
+
+    (4) block -> block statement .
+
+    SPEAK           reduce using rule 4 (block -> block statement .)
+    BRANCH          reduce using rule 4 (block -> block statement .)
+    DEFAULT         reduce using rule 4 (block -> block statement .)
+    STEP            reduce using rule 4 (block -> block statement .)
+    $end            reduce using rule 4 (block -> block statement .)
+
+
+state 12
+
+    (6) statement -> SPEAK STRING .
+
+    SPEAK           reduce using rule 6 (statement -> SPEAK STRING .)
+    BRANCH          reduce using rule 6 (statement -> SPEAK STRING .)
+    DEFAULT         reduce using rule 6 (statement -> SPEAK STRING .)
+    STEP            reduce using rule 6 (statement -> SPEAK STRING .)
+    $end            reduce using rule 6 (statement -> SPEAK STRING .)
+
+
+state 13
+
+    (7) statement -> BRANCH STRING . ID
+
+    ID              shift and go to state 15
+
+
+state 14
+
+    (8) statement -> DEFAULT ID .
+
+    SPEAK           reduce using rule 8 (statement -> DEFAULT ID .)
+    BRANCH          reduce using rule 8 (statement -> DEFAULT ID .)
+    DEFAULT         reduce using rule 8 (statement -> DEFAULT ID .)
+    STEP            reduce using rule 8 (statement -> DEFAULT ID .)
+    $end            reduce using rule 8 (statement -> DEFAULT ID .)
+
+
+state 15
+
+    (7) statement -> BRANCH STRING ID .
+
+    SPEAK           reduce using rule 7 (statement -> BRANCH STRING ID .)
+    BRANCH          reduce using rule 7 (statement -> BRANCH STRING ID .)
+    DEFAULT         reduce using rule 7 (statement -> BRANCH STRING ID .)
+    STEP            reduce using rule 7 (statement -> BRANCH STRING ID .)
+    $end            reduce using rule 7 (statement -> BRANCH STRING ID .)
+

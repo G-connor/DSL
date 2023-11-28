@@ -1,0 +1,63 @@
+Step welcome
+    Speak $name + "，您好，请问有什么可以帮您?"
+    Wait 5
+    Branch "投诉"
+        complainProc
+    Branch "查询余额"
+        billProc
+    Branch "充值"
+        rechargeProc
+    Branch "查询机票"
+        queryProc
+    Branch "购买机票"
+        buyProc
+    Default
+        defaultProc
+    Exit
+
+Step complainProc
+    Speak "您的意见是我们改进工作的动力，请问您还有什么补充?"
+    Wait 100
+    Default
+        defaultProc
+    Exit
+
+Step billProc
+    Speak "您当前的余额是：" + $money
+    Wait 100
+    Branch "充值"
+        rechargeProc
+    Branch "查询机票"
+        queryProc
+    Branch "购买机票"
+        buyProc
+    Default
+        defaultProc
+    Exit
+
+Step rechargeProc
+    Wait 100
+    Branch "查询机票"
+        queryProc
+    Branch "购买机票"
+        buyProc
+    Default
+        defaultProc
+    Exit
+
+Step queryProc
+    Wait 100
+    Branch "购买机票"
+        buyProc
+    Default
+        defaultProc
+    Exit
+
+Step buyProc
+    Wait 100
+    Branch "查询机票"
+        queryProc
+    Default
+        defaultProc
+    Exit
+
