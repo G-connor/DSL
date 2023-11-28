@@ -10,6 +10,7 @@ import time
 import threading
 import sys
 import queue
+from wait import *
 
 stop_loop = False
 
@@ -60,43 +61,43 @@ class Action:
             self.stepDic[item_dic[1]] = self.stepId
             self.stepId += 1
 
-    def timer(self):
-        """
-        用于计时
+    # def timer(self):
+    #     """
+    #     用于计时
+    #
+    #     @return:
+    #     """
+    #     time.sleep(self.waitTime)
+    #     self.isTimeout = True
 
-        @return:
-        """
-        time.sleep(self.waitTime)
-        self.isTimeout = True
-
-    def input_with_timeout(self):
-        """
-        获取用户输入，如果在超时时间内未输入，则返回 None
-
-        @return:
-        """
-        input_queue = queue.Queue()
-
-        def get_input():
-            try:
-                input_queue.put(input())
-            except:
-                pass  # 可能需要处理特定的异常
-
-        input_thread = threading.Thread(target=get_input)
-        input_thread.daemon = True
-        input_thread.start()
-
-        while not input_thread.is_alive():
-            if self.isTimeout:
-                return None
-            time.sleep(0.1)  # 稍微等待一下，避免过于频繁的检查
-
-        input_thread.join()  # 等待用户输入线程结束
-        if not self.isTimeout:
-            return input_queue.get()
-        else:
-            return None
+    # def input_with_timeout(self):
+    #     """
+    #     获取用户输入，如果在超时时间内未输入，则返回 None
+    #
+    #     @return:
+    #     """
+    #     input_queue = queue.Queue()
+    #
+    #     def get_input():
+    #         try:
+    #             input_queue.put(input())
+    #         except:
+    #             pass  # 可能需要处理特定的异常
+    #
+    #     input_thread = threading.Thread(target=get_input)
+    #     input_thread.daemon = True
+    #     input_thread.start()
+    #
+    #     while not input_thread.is_alive():
+    #         if self.isTimeout:
+    #             return None
+    #         time.sleep(0.1)  # 稍微等待一下，避免过于频繁的检查
+    #
+    #     input_thread.join()  # 等待用户输入线程结束
+    #     if not self.isTimeout:
+    #         return input_queue.get()
+    #     else:
+    #         return None
 
     def execute_script(self):
         for item_dic in self.step[2:]:
@@ -115,18 +116,15 @@ class Action:
                     self.speak = ""
                 elif item[0] == "Wait":
                     self.waitTime = item[1]
-                    timer_thread = threading.Thread(target=self.timer)
-                    timer_thread.start()
+                    # timer_thread = threading.Thread(target=self.timer)
+                    # timer_thread.start()
                 elif item[0] == "Branch":
                     if not self.input:
-                        self.input = self.input_with_timeout()
-                        if self.input is None:
-                            print("输入超时，退出程序")
-                            self.stop = True
-                            return  #
+                        self.input = input_with_timeout(self.waitTime)
                     # print(item[1].split('"')[1])
                     if item[1].split('"')[1] == self.input:
                         print("收到输入")
+                        self.input = ""
 
     # class Action:
 
