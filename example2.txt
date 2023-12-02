@@ -1,8 +1,7 @@
 Step welcome
-    Speak $name + "，您好，请问有什么可以帮您? 请输入您的要求"
-    Wait 100
-    Branch "投诉"
-        complainProc
+    Speak $name + "，您好，请问有什么可以帮您?"
+    Speak "这是一条测试语句"
+    Wait 5
     Branch "查询余额"
         billProc
     Branch "充值"
@@ -15,12 +14,6 @@ Step welcome
         defaultProc
     Exit
 
-Step complainProc
-    Speak "您的意见是我们改进工作的动力，请问您还有什么补充?"
-    Wait 100
-    Default
-        defaultProc
-    Exit
 
 Step billProc
     Speak "您当前的余额是：" + $money
@@ -38,6 +31,8 @@ Step billProc
 Step rechargeProc
     Speak "正在充值"
     Wait 100
+    Branch "查询余额"
+        billProc
     Branch "查询机票"
         queryProc
     Branch "购买机票"

@@ -1,13 +1,15 @@
 # coding: utf-8
 # Project: dsl
-# File: interpreter.py
+# File: interpreter_server.py
 # Author: 郭骐畅
-# Date: 2023/11/27 21:37
+# Date: 2023/12/2 20:30
 
 from parsing.parser import *
 from user import *
 import time
-from wait import *
+
+import socket
+import select
 
 
 class Action:
@@ -28,6 +30,8 @@ class Action:
         self.input = ""  # 用户的输入
         # self.stop = False
         self.isSpeakCorrect = False  # 用于判断用户的输入是否符合标准，符合时为True
+        self.conn = None
+        self.address = None
 
     def get_script(self, l: list):
         """
@@ -58,47 +62,8 @@ class Action:
             self.stepDic[item_dic[1]] = self.stepId
             self.stepId += 1
 
-    # def timer(self):
-    #     """
-    #     用于计时
-    #
-    #     @return:
-    #     """
-    #     time.sleep(self.waitTime)
-    #     self.isTimeout = True
-
-    # def input_with_timeout(self):
-    #     """
-    #     获取用户输入，如果在超时时间内未输入，则返回 None
-    #
-    #     @return:
-    #     """
-    #     input_queue = queue.Queue()
-    #
-    #     def get_input():
-    #         try:
-    #             input_queue.put(input())
-    #         except:
-    #             pass  # 可能需要处理特定的异常
-    #
-    #     input_thread = threading.Thread(target=get_input)
-    #     input_thread.daemon = True
-    #     input_thread.start()
-    #
-    #     while not input_thread.is_alive():
-    #         if self.isTimeout:
-    #             return None
-    #         time.sleep(0.1)  # 稍微等待一下，避免过于频繁的检查
-    #
-    #     input_thread.join()  # 等待用户输入线程结束
-    #     if not self.isTimeout:
-    #         return input_queue.get()
-    #     else:
-    #         return None
-
     def execute_script(self):
         """
-        执行具体脚本
 
         @return:
         """
@@ -115,7 +80,7 @@ class Action:
                                 self.speak = self.speak + str(self.user.balance)
                         elif sentence != '+':
                             self.speak = self.speak + sentence.strip('"')
-                    print(self.speak)
+                    self.conn.send(self.speak.encode())
                     self.speak = ""
                 elif item[0] == "Wait":
                     self.waitTime = item[1]
@@ -123,7 +88,15 @@ class Action:
                     # timer_thread.start()
                 elif item[0] == "Branch":
                     if not self.input:
-                        self.input = input_with_timeout(self.waitTime)
+                        ready_to_read, _, _ = select.select([self.conn], [], [], self.waitTime)  # 10秒超时
+                        if ready_to_read:
+                            self.input = self.conn.recv(1024).decode()
+                        else:
+                            message = "等待时间过长，即将退出程序"
+                            self.conn.send(message.encode())
+                            time.sleep(10)  # 等待10秒后关闭连接
+                            self.conn.close()
+                            return
                     # print(item[1].split('"')[1])
                     if item[1].split('"')[1] == self.input:
                         self.isSpeakCorrect = True
@@ -134,36 +107,35 @@ class Action:
                         return
                 elif item[0] == "Default":
                     if self.input != "退出" and self.input != "":
-                        print("您当前的输入不符合标准，将返回初始界面")
+                        message = "您当前的输入不符合标准，将返回初始界面"
+                        self.conn.send(message.encode())
+                        time.sleep(1)
                         self.step = self.script[0]
                         self.currentStep = list(self.step)
                         self.input = ""
                         return
                 elif item == 'Exit':
                     if not self.input:
-                        self.input = input_with_timeout(self.waitTime)
+                        ready_to_read, _, _ = select.select([self.conn], [], [], self.waitTime)  # 10秒超时
+                        if ready_to_read:
+                            self.input = self.conn.recv(1024).decode()
+                        else:
+                            message = "等待时间过长，即将退出程序"
+                            self.conn.send(message.encode())
+                            time.sleep(5)  # 等待10秒后关闭连接
+                            self.conn.close()
+                            return
                     if self.input == "退出":
                         self.isOver = True
+                        print("客户已退出")
                         return
                     else:
-                        print("您当前的输入不符合标准，将返回初始界面")
+                        message = "您当前的输入不符合标准，将返回初始界面"
+                        self.conn.send(message.encode())
                         self.step = self.script[0]
                         self.currentStep = list(self.step)
                         self.input = ""
                         return
-
-
-    # class Action:
-
-
-#     """
-#
-#     """
-#     def __init__(self):
-#         self.speak = ""
-#         self.step = []
-#
-#     def initialize
 
 
 def interpreter(action: Action, file_list: list):
@@ -184,10 +156,5 @@ def interpreter(action: Action, file_list: list):
         if action.isOver:
             break
         time.sleep(0.1)
-    print("您已退出程序，欢迎下次光临")
-
-
-if __name__ == '__main__':
-    files = ['D:/python project/dsl/example.txt']
-    act = Action()
-    interpreter(act, files)
+    message = "您已退出程序，欢迎下次光临"
+    action.conn.send(message.encode())

@@ -1,0 +1,29 @@
+Step welcome
+    Speak $name + "，您好，请问有什么可以帮您?"
+    Wait 10
+    Branch "你好"
+        nihaoProc
+    Branch "你不好"
+        nibuhaoProc
+    Default
+        defaultProc
+    Exit
+
+Step nihaoProc
+    Speak "你好！！！"
+    Wait 100
+    Default
+        defaultProc
+    Exit
+
+Step nibuhaoProc
+    Speak "你不好！！！"
+    Wait 100
+    Branch "你好"
+        nihaoProc
+    Default
+        defaultProc
+    Exit
+
+
+
