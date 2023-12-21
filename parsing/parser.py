@@ -20,10 +20,13 @@ class Parser:
     _speak_content = _name ^ _string_constant
     _speak_content_action = pp.Group(pp.Keyword("Speak") + pp.Group(
         _speak_content + pp.ZeroOrMore('+' + _speak_content)).set_parse_action(lambda tokens: tokens[0::2]))
+    _change = pp.Group(pp.Keyword("Change") + _name+pp.ZeroOrMore('+') + pp.ZeroOrMore('-'))
 
     _step = pp.Group(pp.Keyword("Step") + pp.Word(pp.alphas) + pp.Group(
-        pp.ZeroOrMore(_speak_content_action))+ pp.Group(_wait) + pp.Group(pp.ZeroOrMore(_branch)) + pp.Group(pp.ZeroOrMore(_default))
-                      + pp.Group(_exit_action))
+        pp.ZeroOrMore(_speak_content_action)) + pp.Group(_wait) + pp.Group(pp.ZeroOrMore(_change))+pp.Group(
+        pp.ZeroOrMore(_speak_content_action))
+                     + pp.Group(pp.ZeroOrMore(_branch)) + pp.Group(pp.ZeroOrMore(_default))
+                     + pp.Group(_exit_action))
 
     language = pp.ZeroOrMore(_step)
 
@@ -61,7 +64,6 @@ def get_files(files: list):
 #
 #
 # def process_step(step:Step):
-
 
 
 # class Process:

@@ -132,6 +132,11 @@ class Action:
                         self.currentStep = list(self.step)
                         self.input = ""
                         return
+                elif item[0] == "Change":
+                    answer = item[1]
+                    if answer.startswith('$'):
+                        if answer[1:] == "name":
+                            self.user.name = input_with_timeout(self.waitTime)
                 elif item[0] == "Default":
                     if self.input != "退出" and self.input != "":
                         print("您当前的输入不符合标准，将返回初始界面")
