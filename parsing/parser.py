@@ -11,6 +11,8 @@ class Parser:
     _string_constant = pp.quoted_string('"')
 
     _name = pp.Combine('$' + pp.Regex("[0-9A-Za-z_]+"))
+    _plus = pp.Literal('+')
+    _minus_with_integer = pp.Literal('-') + _integer
     _exit_action = pp.Keyword("Exit")
     # _goto_action = pp.Group(pp.Keyword("Goto") + pp.Word(pp.alphas))
     _goto_action = pp.Word(pp.alphas)
@@ -20,7 +22,7 @@ class Parser:
     _speak_content = _name ^ _string_constant
     _speak_content_action = pp.Group(pp.Keyword("Speak") + pp.Group(
         _speak_content + pp.ZeroOrMore('+' + _speak_content)).set_parse_action(lambda tokens: tokens[0::2]))
-    _change = pp.Group(pp.Keyword("Change") + _name+pp.ZeroOrMore('+') + pp.ZeroOrMore('-'))
+    _change = pp.Group(pp.Keyword("Change") + _name + pp.Optional(_plus) + pp.Optional(_minus_with_integer))
 
     _step = pp.Group(pp.Keyword("Step") + pp.Word(pp.alphas) + pp.Group(
         pp.ZeroOrMore(_speak_content_action)) + pp.Group(_wait) + pp.Group(pp.ZeroOrMore(_change))+pp.Group(
