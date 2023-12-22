@@ -5,6 +5,23 @@
 # Date: 2023/12/2 19:44
 
 import socket
+import threading
+
+
+def receive_messages(client_socket,isConnect):
+    while True:
+        try:
+            response = client_socket.recv(1024).decode()
+            if not response:
+                break  # 如果没有收到响应，则退出循环
+            print(response)
+            if response == "等待时间过长，即将退出程序":
+                client_socket.close()
+                isConnect = False
+                break
+        except Exception as e:
+            print("连接已断开")
+            break
 
 
 def client_program():
@@ -13,24 +30,19 @@ def client_program():
 
     client_socket = socket.socket()
     client_socket.connect((host, port))
+    isConnect = True
+    # 创建并启动接收消息的线程
+    threading.Thread(target=receive_messages, args=(client_socket,isConnect)).start()
 
-    # message = input("请输入: ")
-    # client_socket.send(message.encode())
-    #
-    # # 接收服务端的响应
-    # response = client_socket.recv(1024).decode()
-    # print("", response)
     while True:
-        response = client_socket.recv(1024).decode()
-        print(response)
-        if response != "您当前的输入不符合标准，将返回初始界面":
+        if isConnect:
             message = input("输入：")
+            if message.lower().strip() == "退出":
+                break  # 如果输入"退出"，则关闭客户端
             client_socket.send(message.encode())
-            if message == "退出":
-                break
+        else:
+            break
 
-    response = client_socket.recv(1024).decode()
-    print(response)
     client_socket.close()
 
 

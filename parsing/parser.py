@@ -86,6 +86,7 @@ def get_files(files: list):
 
 
 if __name__ == '__main__':
-    print(get_files(['D:/python project/dsl/example.txt']))
+    # print(get_files(['D:/python project/dsl/example/example_test1.txt']))
+    print(get_files(['../test/example/example_test2.txt']))
     # p = Process()
     # p.get_script(['D:/python project/dsl/example.txt'])

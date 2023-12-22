@@ -1,6 +1,6 @@
 Step welcome
     Speak $name + "，您好，请问有什么可以帮您?"
-    Wait 10
+    Wait 100
     Branch "你好"
         nihaoProc
     Branch "你不好"

@@ -14,7 +14,7 @@ def server_program():
     host = socket.gethostname()
     port = 12345
 
-    files = ['D:/python project/dsl/example3.txt']
+    files = ['D:/python project/dsl/example/example.txt']
     server_socket = socket.socket()
     server_socket.bind((host, port))
     server_socket.listen(1)

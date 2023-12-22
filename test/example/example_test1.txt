@@ -1,0 +1,6 @@
+Step welcome
+    Speak $name + "这是一条测试语句"
+    Wait 100
+    Branch "测试"
+        test
+    Exit

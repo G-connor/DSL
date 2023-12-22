@@ -11,6 +11,8 @@ Step welcome
         queryProc
     Branch "购买机票"
         buyProc
+    Branch "修改昵称"
+        changeProc
     Default
         defaultProc
     Exit
@@ -36,8 +38,10 @@ Step billProc
     Exit
 
 Step rechargeProc
-    Speak "正在充值"
+    Speak "请输入您需要充值的金额"
     Wait 100
+    Change $money +
+    Speak "充值完成，您当前的余额为：" + $money + "。  请问您还需要什么帮助"
     Branch "查询机票"
         queryProc
     Branch "购买机票"
@@ -56,8 +60,10 @@ Step queryProc
     Exit
 
 Step buyProc
-    Speak "正在购买机票"
+    Speak "您当前购买的机票需要10元"
     Wait 100
+    Change $money - 10
+    Speak "购买成功，您当前的余额是" + $money +"。 请问您还需要什么帮助"
     Branch "查询机票"
         queryProc
     Branch "投诉"
@@ -66,3 +72,21 @@ Step buyProc
         defaultProc
     Exit
 
+Step changeProc
+    Speak "请输入您要修改的名称"
+    Wait 100
+    Change $name
+    Speak "请问您还需要什么帮助"
+    Branch "投诉"
+        complainProc
+    Branch "查询余额"
+        billProc
+    Branch "充值"
+        rechargeProc
+    Branch "查询机票"
+        queryProc
+    Branch "购买机票"
+        buyProc
+    Default
+        defaultProc
+    Exit

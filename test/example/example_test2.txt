@@ -1,0 +1,18 @@
+Step welcome
+    Speak $name + "，您好，请问有什么可以帮您? 请输入您的要求"
+    Wait 100
+    Branch "投诉"
+        complainProc
+    Branch "查询余额"
+        billProc
+    Branch "充值"
+        rechargeProc
+    Branch "查询机票"
+        queryProc
+    Branch "购买机票"
+        buyProc
+    Branch "修改昵称"
+        changeProc
+    Default
+        defaultProc
+    Exit

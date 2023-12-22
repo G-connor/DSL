@@ -198,6 +198,6 @@ def interpreter(action: Action, file_list: list):
 
 
 if __name__ == '__main__':
-    files = ['D:/python project/dsl/example.txt']
+    files = ['D:/python project/dsl/example/example2.txt']
     act = Action()
     interpreter(act, files)

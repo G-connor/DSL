@@ -94,7 +94,7 @@ class Action:
                         else:
                             message = "等待时间过长，即将退出程序"
                             self.conn.send(message.encode())
-                            time.sleep(10)  # 等待10秒后关闭连接
+                            time.sleep(0.1)  # 等待10秒后关闭连接
                             self.conn.close()
                             return
                     # print(item[1].split('"')[1])
@@ -105,6 +105,20 @@ class Action:
                         self.currentStep = list(self.step)
                         self.input = ""
                         return
+                elif item[0] == "Change":
+                    answer = item[1]
+                    if answer.startswith('$'):
+                        if answer[1:] == "name":
+                            ready_to_read, _, _ = select.select([self.conn], [], [], self.waitTime)  # 10秒超时
+                            if ready_to_read:
+                                self.user.name = self.conn.recv(1024).decode()
+                        elif answer[1:] == "money":
+                            if item[2] == "+":
+                                ready_to_read, _, _ = select.select([self.conn], [], [], self.waitTime)  # 10秒超时
+                                if ready_to_read:
+                                    self.user.balance += int(self.conn.recv(1024).decode())
+                            elif item[2] == '-':
+                                self.user.balance -= item[3]
                 elif item[0] == "Default":
                     if self.input != "退出" and self.input != "":
                         message = "您当前的输入不符合标准，将返回初始界面"
