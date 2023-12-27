@@ -36,7 +36,7 @@ def client_program():
 
     while True:
         if isConnect:
-            message = input("输入：")
+            message = input("")
             if message.lower().strip() == "退出":
                 break  # 如果输入"退出"，则关闭客户端
             client_socket.send(message.encode())

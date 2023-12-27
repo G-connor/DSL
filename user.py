@@ -6,7 +6,7 @@
 
 class User:
     """
-
+        模拟用户类
     """
 
     def __init__(self):

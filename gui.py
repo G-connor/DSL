@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import simpledialog
+from user import *
 
 
 class GUI:
@@ -11,6 +12,8 @@ class GUI:
         self.input_result = None
         self.input_window = None  # 用户输入窗口
         self.is_input_time_out = False
+        self.user = User()
+        self.user.login()
 
     def gui_print(self, message):
         if self.text_area:
@@ -53,7 +56,7 @@ class GUI:
 
     def _handle_input_submit(self):
         self.input_result = self.input_entry.get()
-        self.gui_print("用户: " + self.input_result)  # 将用户的输入也显示在对话框内
+        self.gui_print(self.user.name + ":" + self.input_result)  # 将用户的输入也显示在对话框内
         self.input_window.destroy()
 
     def start(self):
@@ -65,10 +68,23 @@ gui = GUI()
 
 
 def gui_print(message):
+    """
+    向用户提供输出接口
+
+    @param message:输出信息
+    @return:
+    """
     gui.gui_print(message)
 
 
 def gui_input(prompt, time=10):
+    """
+    向用户提供输入接口
+
+    @param prompt:输入信息
+    @param time:等待时间
+    @return:
+    """
     return gui.gui_input(prompt, time)
 
 

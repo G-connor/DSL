@@ -34,7 +34,8 @@ class Action:
 
     def __init__(self):
         self.script = []  # 脚本语言
-        self.user = User()  # 当前用户
+        # self.user = User()  # 当前用户
+        self.user = gui.gui.user  # 当前用户
         self.step = []  # 当前执行步骤
         self.currentStep = []
         self.speak = ""
@@ -74,44 +75,6 @@ class Action:
             #  self.stepDic[self.stepId] = item_dic[1]
             self.stepDic[item_dic[1]] = self.stepId
             self.stepId += 1
-
-    # def timer(self):
-    #     """
-    #     用于计时
-    #
-    #     @return:
-    #     """
-    #     time.sleep(self.waitTime)
-    #     self.isTimeout = True
-
-    # def input_with_timeout(self):
-    #     """
-    #     获取用户输入，如果在超时时间内未输入，则返回 None
-    #
-    #     @return:
-    #     """
-    #     input_queue = queue.Queue()
-    #
-    #     def get_input():
-    #         try:
-    #             input_queue.put(input())
-    #         except:
-    #             pass  # 可能需要处理特定的异常
-    #
-    #     input_thread = threading.Thread(target=get_input)
-    #     input_thread.daemon = True
-    #     input_thread.start()
-    #
-    #     while not input_thread.is_alive():
-    #         if self.isTimeout:
-    #             return None
-    #         time.sleep(0.1)  # 稍微等待一下，避免过于频繁的检查
-    #
-    #     input_thread.join()  # 等待用户输入线程结束
-    #     if not self.isTimeout:
-    #         return input_queue.get()
-    #     else:
-    #         return None
 
     def execute_script(self):
         """
@@ -165,6 +128,7 @@ class Action:
                             input = gui.gui_input("请输入：", self.waitTime)
                             if input:
                                 self.user.name = input
+                                gui.gui.user.name = self.user.name
                             else:
                                 gui.gui_print("超时未输入")
                                 time.sleep(5)

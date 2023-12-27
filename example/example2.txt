@@ -1,7 +1,7 @@
 Step welcome
     Speak $name + "，您好，请问有什么可以帮您?"
     Speak "这是一条测试语句"
-    Wait 5
+    Wait 10
     Branch "查询余额"
         billProc
     Branch "充值"
